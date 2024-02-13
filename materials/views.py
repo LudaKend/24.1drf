@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets, generics
 from materials.models import Course, Lesson
-from materials.course_serializer import CourseSerializer
-from materials.lesson_serializer import LessonSerializer
+from materials.serializer import CourseSerializer, LessonSerializer
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
