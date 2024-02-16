@@ -3,7 +3,6 @@ from rest_framework.serializers import SerializerMethodField
 from materials.models import Course, Lesson
 
 
-
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
@@ -28,5 +27,6 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['name', 'description', 'quantity_lesson', 'lessons',]
+        fields = ['name', 'description', 'quantity_lesson', 'lessons', ]
+
 
