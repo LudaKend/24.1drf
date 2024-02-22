@@ -1,0 +1,24 @@
+[
+  {
+    "model": "users.payment",
+    "fields": {
+      "user_email": "1@mail.ru",
+      "data_pay": "2024-02-13",
+      "course": "2",
+      "lesson": "38",
+      "payment": 1500.0,
+      "type_payment": "СБП"
+    }
+  },
+  {
+    "model": "users.payment",
+    "fields": {
+      "user_email": "2@mail.ru",
+      "data_pay": "2024-02-14",
+      "course": "3",
+      "lesson": "4",
+      "payment": 1700.0,
+      "type_payment": "СБП"
+    }
+  }
+]
