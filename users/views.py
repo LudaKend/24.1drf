@@ -3,7 +3,7 @@ from users.models import Payment, User
 from users.serializer import PaymentSerializer, UserSerializer, MyTokenObtainPairSerializer
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 
@@ -23,6 +23,7 @@ class PaymentListAPIView(generics.ListAPIView):
 
 class UserCreateAPIView(generics.CreateAPIView):
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
         """метод для сохранения хешированного пароля в бд (если пароль не хешируется -
