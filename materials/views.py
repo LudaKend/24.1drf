@@ -31,6 +31,15 @@ class CourseViewSet(viewsets.ModelViewSet):
         #print([permission() for permission in self.permission_classes])  #для отладки
         return [permission() for permission in self.permission_classes]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_staff:
+            print(self.request.user.is_staff)
+            return queryset
+        else:
+            owner_queryset = queryset.filter(owner=self.request.user)
+            return owner_queryset
+
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
