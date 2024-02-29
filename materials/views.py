@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics
 from materials.models import Course, Lesson
 from materials.serializer import CourseSerializer, LessonSerializer
@@ -20,7 +20,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             self.permission_classes = [IsAuthenticated, ~ModeratorPermissionsClass]
         elif self.action == 'list':
-            self.permission_classes = [IsAuthenticated, ModeratorPermissionsClass]
+            self.permission_classes = [IsAuthenticated, ModeratorPermissionsClass | OwnerPermissionsClass]
         elif self.action == 'retrieve':
             self.permission_classes = [IsAuthenticated, ModeratorPermissionsClass | OwnerPermissionsClass]
         elif self.action == 'update':
@@ -46,18 +46,18 @@ class LessonCreateAPIView(generics.CreateAPIView):
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated, OwnerPermissionsClass]
+    permission_classes = [IsAuthenticated, ModeratorPermissionsClass | OwnerPermissionsClass]
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        owner_queryset = queryset.filter(owner=self.request.user)
-        return owner_queryset
-
-
-class LessonAllListAPIView(generics.ListAPIView):
-    serializer_class = LessonSerializer
-    queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated, ModeratorPermissionsClass]
+        #print(queryset)
+        #print(self.request.user.is_staff)
+        if self.request.user.is_staff:
+            print(self.request.user.is_staff)
+            return queryset
+        else:
+            owner_queryset = queryset.filter(owner=self.request.user)
+            return owner_queryset
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
