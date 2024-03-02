@@ -7,10 +7,12 @@ from users.permission import ModeratorPermissionsClass, UsuallyPermissionsClass,
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from materials.paginators import MaterialsPaginator
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
+    pagination_class = MaterialsPaginator
 
     def perform_create(self, serializer):
         """метод для записи авторизованного пользователя в качестве владельца """
@@ -59,6 +61,7 @@ class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated] #, ModeratorPermissionsClass | UsuallyPermissionsClass]
+    pagination_class = MaterialsPaginator
 
     def get_queryset(self):
         queryset = super().get_queryset()
