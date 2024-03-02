@@ -35,6 +35,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        print(f'queryset from views.py        {queryset}')
         if self.request.user.is_staff:
             print(self.request.user.is_staff)
             return queryset
