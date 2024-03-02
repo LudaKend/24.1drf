@@ -22,7 +22,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             self.permission_classes = [IsAuthenticated, ~ModeratorPermissionsClass]
         elif self.action == 'list':
-            self.permission_classes = [IsAuthenticated, ModeratorPermissionsClass | UsuallyPermissionsClass]
+            self.permission_classes = [IsAuthenticated] #, ModeratorPermissionsClass | UsuallyPermissionsClass]
         elif self.action == 'retrieve':
             self.permission_classes = [IsAuthenticated, ModeratorPermissionsClass | OwnerPermissionsClass]
         elif self.action == 'update':
@@ -35,9 +35,9 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        print(f'queryset from views.py        {queryset}')
-        if self.request.user.is_staff:
-            print(self.request.user.is_staff)
+        # if self.request.user.is_staff:
+        #     print(self.request.user.is_staff)
+        if self.request.user.groups.filter(name='moderator').exists():
             return queryset
         else:
             owner_queryset = queryset.filter(owner=self.request.user)
@@ -58,14 +58,13 @@ class LessonCreateAPIView(generics.CreateAPIView):
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated, ModeratorPermissionsClass | UsuallyPermissionsClass]
+    permission_classes = [IsAuthenticated] #, ModeratorPermissionsClass | UsuallyPermissionsClass]
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        #print(queryset)
-        #print(self.request.user.is_staff)
-        if self.request.user.is_staff:
-            print(self.request.user.is_staff)
+        # if self.request.user.is_staff:
+        #     print(self.request.user.is_staff)
+        if self.request.user.groups.filter(name='moderator').exists():
             return queryset
         else:
             owner_queryset = queryset.filter(owner=self.request.user)
