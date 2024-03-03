@@ -52,7 +52,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         """метод для записи авторизованного пользователя в качестве владельца """
-        print(self.request.user)
+        #print(self.request.user)   #для отладки
         lesson = serializer.save(owner=self.request.user)
         lesson.save()
 
@@ -93,32 +93,26 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
 class SubscriptionAPIView(APIView):
     serializer_class = SubscriptionSerializer
 
-    def post(self, request): #, pk):
-        #print(pk)  #здесь отлично, вижу pk из http://localhost:8000/subscription/2/
+    def post(self, request):
         serializer = SubscriptionSerializer(data=request.data)
         #print(serializer)   #для отладки
-        # #здесь вводные данные post-запроса, по-хорошему это лишний ввод доп.информации и от
-                            # него нужно избавиться, но как? мне проще pk убрать в urls.py
         course_id = self.request.data['course']  #получаем id курса из self.request.data
         #print(course_id)  #для отладки
-        #получаем объект курса из базы с помощью get_object_or_404
-        #course_item = get_object_or_404(Course, pk=pk)           #здесь pk использовать или лучше course_id?..
-        #print(course_item)                                       #и зачем мне вытаскивать название курса, если его id достаточно?!
-
         # получаем список подписок по текущему пользователю:
         #print(self.request.user)
         user_subscription = Subscription.objects.filter(user=request.user, course=course_id)
         #print(user_subscription)    #для отладки
-
         if user_subscription.exists():
             #print(user_subscription.exists())  #для отладки
         # Если подписка на этот курс есть у пользователя,то удаляем ее
             Subscription.objects.filter(user=request.user, course=course_id).delete()
-            message = 'подписка удалена'
+            #message = 'подписка удалена'
+            return Response({"message": "подписка удалена"})
         else:
         # Если подписки у пользователя на этот курс нет,то создаем ее
             if serializer.is_valid():
                 serializer.save()
-                message = 'подписка добавлена'
-        return Response({"message": message})
+                #message = 'подписка добавлена'
+            return Response({"message": "подписка добавлена"})
+        #return Response({"message": message})
 

@@ -39,21 +39,22 @@ class CourseSerializer(serializers.ModelSerializer):
     #     return self.request.user
 
     def get_subscriptions(self, obj):
-        print(obj)
+        # print(obj)
         #user = self.request.user
         #user = self.get_object()
         list_subscription = Subscription.objects.filter(course=obj)
-        print(f'list:{list_subscription}')
-        print(obj.subscription_set.all())
-        print(type(list_subscription))
+
+        # print(f'list:{list_subscription}')
+        # print(obj.subscription_set.all())
+        # print(type(list_subscription))
 
         # json_string = json.dumps(list(list_subscription))
         # print(json_string)
         # print(type(json_string))
         #print(obj.subscription_set.filter(user=self.user))
         for pos in list_subscription:
-            print(pos)
-            #print(pos.user_from_subscription)
+            # print(pos)
+            print(pos.user_from_subscription)
         #    return pos.user
         #    return pos
         #return list_subscription
