@@ -75,7 +75,7 @@ class SubscriptionTestCase(APITestCase):
         self.user = User.objects.create(email='autotest@mail.ru', password='init_init')
         self.client.force_authenticate(user=self.user)
         self.course = Course.objects.create(name='для теста', description='для автотеста', owner=self.user)
-        self.data = {'user': self.user.id, 'course': self.course.id}
+        self.data = {'course': self.course.id}
 
     def test_add(self):
         response = self.client.post('/subscription/', self.data)
