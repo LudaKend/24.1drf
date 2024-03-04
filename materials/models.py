@@ -19,7 +19,6 @@ class Course(models.Model):
         verbose_name_plural = 'Курсы'
 
 
-
 class Lesson(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название урока')
     description = models.TextField(verbose_name='Описание урока', **NULLABLE)
@@ -27,7 +26,6 @@ class Lesson(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name='Курс')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, verbose_name='Владелец',
                               **NULLABLE)
-
 
     def __str__(self):
         '''строковое отображение обьекта'''
@@ -37,6 +35,7 @@ class Lesson(models.Model):
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
         ordering = ['id']
+
 
 class Subscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь',

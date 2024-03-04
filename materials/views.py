@@ -1,13 +1,12 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics
 from materials.models import Course, Lesson, Subscription
 from materials.serializer import CourseSerializer, LessonSerializer, SubscriptionSerializer
 from rest_framework.permissions import IsAuthenticated
-from users.permission import ModeratorPermissionsClass, UsuallyPermissionsClass, OwnerPermissionsClass
-from django.http import Http404
+from users.permission import ModeratorPermissionsClass, OwnerPermissionsClass
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from materials.paginators import MaterialsPaginator
+from django.shortcuts import get_object_or_404
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
@@ -31,7 +30,6 @@ class CourseViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAuthenticated, ModeratorPermissionsClass | OwnerPermissionsClass]
         elif self.action == 'destroy':
             self.permission_classes = [IsAuthenticated, OwnerPermissionsClass]
-
         #print([permission() for permission in self.permission_classes])  #для отладки
         return [permission() for permission in self.permission_classes]
 
@@ -94,24 +92,27 @@ class SubscriptionAPIView(APIView):
     serializer_class = SubscriptionSerializer
 
     def post(self, request):
+        #print(request.data)  #для отладки
         serializer = SubscriptionSerializer(data=request.data)
         #print(serializer)   #для отладки
         course_id = self.request.data['course']  #получаем id курса из self.request.data
         #print(course_id)  #для отладки
         # получаем список подписок по текущему пользователю:
-        #print(self.request.user)
-        user_subscription = Subscription.objects.filter(user=request.user, course=course_id)
+        user_subscription = Subscription.objects.filter(user=self.request.user, course=course_id)
         #print(user_subscription)    #для отладки
         if user_subscription.exists():
             #print(user_subscription.exists())  #для отладки
         # Если подписка на этот курс есть у пользователя,то удаляем ее
-            Subscription.objects.filter(user=request.user, course=course_id).delete()
+            Subscription.objects.filter(user=self.request.user, course=course_id).delete()
             #message = 'подписка удалена'
             return Response({"message": "подписка удалена"})
         else:
         # Если подписки у пользователя на этот курс нет,то создаем ее
             if serializer.is_valid():
-                serializer.save()
+                #temp_course = Course.objects.filter(id=course_id)
+                temp_course = get_object_or_404(Course, id=course_id)
+                #print(temp_course)
+                Subscription.objects.create(user=self.request.user, course=temp_course)
                 #message = 'подписка добавлена'
             return Response({"message": "подписка добавлена"})
         #return Response({"message": message})

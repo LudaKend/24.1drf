@@ -1,9 +1,7 @@
-from django.test import TestCase
 from rest_framework.test import APITestCase
 from rest_framework import status
 from users.models import User
 from materials.models import Lesson, Course, Subscription
-from rest_framework.test import force_authenticate
 from django.urls import reverse
 from django.contrib.auth.models import Group
 
