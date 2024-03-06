@@ -42,9 +42,13 @@ class CourseViewSet(viewsets.ModelViewSet):
             return queryset
         else:
             #print(self.request.user)   # для отладки
-            owner_queryset = queryset.filter(owner=self.request.user)
-            return owner_queryset
+            # owner_queryset = queryset.filter(owner=self.request.user)
+            # return owner_queryset
+            if not self.request.user.is_anonymous:
+                owner_queryset = queryset.filter(owner=self.request.user)
+                return owner_queryset
 
+            return None
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
