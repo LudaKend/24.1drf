@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from materials.paginators import MaterialsPaginator
 from django.shortcuts import get_object_or_404
+from users.models import User
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
@@ -40,6 +41,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         if self.request.user.groups.filter(name='moderator').exists():
             return queryset
         else:
+            #print(self.request.user)   # для отладки
             owner_queryset = queryset.filter(owner=self.request.user)
             return owner_queryset
 
@@ -90,6 +92,7 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
 
 class SubscriptionAPIView(APIView):
     serializer_class = SubscriptionSerializer
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         #print(request.data)  #для отладки

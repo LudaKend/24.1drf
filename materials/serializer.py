@@ -31,7 +31,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def get_quantity_lesson(self, course):
         list_lesson = Lesson.objects.filter(course=course)
-        print(list_lesson)  #для отладки
+        #print(list_lesson)  #для отладки
         return len(list_lesson)
 
     # def get_object(self, queryset):
