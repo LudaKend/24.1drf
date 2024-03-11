@@ -6,7 +6,31 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
+from materials.models import Course
+from django.shortcuts import get_object_or_404
 
+
+class PaymentCreateAPIView(generics.CreateAPIView):
+    serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        """метод для записи авторизованного пользователя в качестве плательщика """
+        payment = serializer.save(user_email=self.request.user)
+        payment.save()
+
+    def create(self, request):
+        """метод для записи суммы в платежную позицию в таблице Payment, исходя из стоимости курса"""
+        #print(request.data)            #для отладки
+        temp_course = get_object_or_404(Course, pk=request.data['course'])
+        #print(temp_course)             #для отладки
+        #print(temp_course.price)       #для отладки
+        serializer = PaymentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        payment = serializer.save(payment=temp_course.price*100)
+        payment.save()
+        return Response(serializer.data)
 
 
 class PaymentListAPIView(generics.ListAPIView):

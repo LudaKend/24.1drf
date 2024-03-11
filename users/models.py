@@ -24,11 +24,13 @@ class User(AbstractUser):
 
 class Payment(models.Model):
     user_email = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='email студента', **NULLABLE)
-    data_pay = models.DateField(verbose_name='дата оплаты')
-    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, verbose_name='оплаченный курс', **NULLABLE)
-    lesson = models.ForeignKey(Lesson, on_delete=models.DO_NOTHING, verbose_name='оплаченный урок', **NULLABLE)
-    payment = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='сумма платежа')
-    type_payment = models.CharField(max_length=100, verbose_name='способ платежа')
+    data_pay = models.DateField(verbose_name='дата оплаты', **NULLABLE)
+    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, verbose_name='оплаченный курс', default=1)
+    lesson = models.ForeignKey(Lesson, on_delete=models.DO_NOTHING, verbose_name='оплаченный урок', default=6)
+    payment = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='сумма платежа', default=0)
+    type_payment = models.CharField(max_length=100, verbose_name='способ платежа', default='Stripe')
+    data_create = models.DateField(verbose_name='дата создания', auto_now_add=True)
+    link = models.URLField(verbose_name='ссылка на оплату', **NULLABLE)
 
     def __str__(self):
         '''строковое отображение обьекта'''

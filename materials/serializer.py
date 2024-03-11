@@ -62,6 +62,6 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['name', 'description', 'quantity_lesson', 'lessons', 'subscriptions', 'user', ]
+        fields = ['name', 'description', 'price', 'quantity_lesson', 'lessons', 'subscriptions', 'user', ]
         validators = [WrongLinkValidator(field='name'), WrongLinkValidator(field='description')]
 

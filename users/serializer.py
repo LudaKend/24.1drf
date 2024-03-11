@@ -3,9 +3,11 @@ from users.models import Payment, User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class PaymentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Payment
         fields = '__all__'
+
 
 class UserSerializer(serializers.ModelSerializer):
     # username = None
