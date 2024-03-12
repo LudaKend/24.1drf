@@ -30,7 +30,7 @@ class Payment(models.Model):
     payment = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='сумма платежа', default=0)
     type_payment = models.CharField(max_length=100, verbose_name='способ платежа', default='Stripe')
     data_create = models.DateField(verbose_name='дата создания', auto_now_add=True)
-    link = models.URLField(max_length=1000, verbose_name='ссылка на оплату', **NULLABLE)
+    link = models.URLField(max_length=500, verbose_name='ссылка на оплату', **NULLABLE)
 
     def __str__(self):
         '''строковое отображение обьекта'''

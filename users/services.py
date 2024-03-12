@@ -22,7 +22,7 @@ def create_price(product_id):
     headers = {'Authorization': 'Basic c2tfdGVzdF80ZUMzOUhxTHlqV0Rhcmp0VDF6ZHA3ZGM6',
                'Content-Type': 'application/x-www-form-urlencoded',
                'Connection': 'keep-alive'}
-    params = {'currency': 'rub', 'unit_amount': 1000, 'product': product_id}   #'recurring[interval]': 'month',
+    params = {'currency': 'usd', 'unit_amount': 1000, 'product': product_id}   #'recurring[interval]': 'month',
     response = requests.post(url=url, headers=headers, params=params)
     print(response.status_code)
     stripe_price = json.loads(response.text)
@@ -39,11 +39,12 @@ def create_session(course_id):
                'Content-Type': 'application/x-www-form-urlencoded',
                'Connection': 'keep-alive'}
     params = {'line_items[0][price]': stripe_price,
-              'line_items[0][quantity]': 1, 'mode': 'subscription', 'success_url': 'https://example.com/success'}
+              'line_items[0][quantity]': 1, 'mode': 'payment', #'mode': 'subscription',
+              'success_url': 'https://example.com/success'}
     response = requests.post(url=url, headers=headers, params=params)
     print(response.status_code)
-    print(response.text)
     stripe_link = json.loads(response.text)
-    return stripe_link
+    #print(stripe_link['url'])      #для отладки
+    return stripe_link['url']
 
 
