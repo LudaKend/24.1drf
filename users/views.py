@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from materials.models import Course
 from django.shortcuts import get_object_or_404
-from users.services import create_product
+from users.services import create_session
 
 
 class PaymentCreateAPIView(generics.CreateAPIView):
@@ -26,18 +26,17 @@ class PaymentCreateAPIView(generics.CreateAPIView):
         temp_course = get_object_or_404(Course, pk=request.data['course'])
         #print(temp_course)             #для отладки
         #print(temp_course.price)       #для отладки
-        product_json = create_product()
-        print(product_json)
+
+        #print(f'id курса из БД{temp_course.id}')     #для отладки
+        link = create_session(temp_course.id)
+        #print(link)                    #для отладки
+
         serializer = PaymentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        payment = serializer.save(payment=temp_course.price*100)
+        payment = serializer.save(payment=temp_course.price*100, link=link)
         payment.save()
         return Response(serializer.data)
-
-    def get_product(self):
-        product_json = create_product()
-        print(product_json)
 
 
 class PaymentListAPIView(generics.ListAPIView):

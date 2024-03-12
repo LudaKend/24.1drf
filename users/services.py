@@ -1,6 +1,7 @@
 import requests
 import json
-#import stripe
+from django.shortcuts import get_object_or_404
+from materials.models import Stripe
 
 def create_product(name):
     '''формируем данные для POST-запроса в Stripe, чтобы создать продукт'''
@@ -21,17 +22,28 @@ def create_price(product_id):
     headers = {'Authorization': 'Basic c2tfdGVzdF80ZUMzOUhxTHlqV0Rhcmp0VDF6ZHA3ZGM6',
                'Content-Type': 'application/x-www-form-urlencoded',
                'Connection': 'keep-alive'}
-    params = {'currency': 'rub', 'unit_amount': 1000, 'recurring[interval]': 'month', 'product': product_id}
+    params = {'currency': 'rub', 'unit_amount': 1000, 'product': product_id}   #'recurring[interval]': 'month',
     response = requests.post(url=url, headers=headers, params=params)
     print(response.status_code)
     stripe_price = json.loads(response.text)
     return stripe_price
 
 
-def create_session():
+def create_session(course_id):
     '''формируем данные для POST-запроса в Stripe, чтобы создать сессию для получения ссылки на оплату'''
-    response = requests.post('https://stripe.com/docs/api/checkout/sessions/create')
+    stripe_data = get_object_or_404(Stripe, course_id=course_id)
+    stripe_price = stripe_data.stripe_price
+    #print(f'прайс из таблицы Stripe:   {stripe_price}')          #для отладки
+    url = 'https://api.stripe.com/v1/checkout/sessions'
+    headers = {'Authorization': 'Basic c2tfdGVzdF80ZUMzOUhxTHlqV0Rhcmp0VDF6ZHA3ZGM6',
+               'Content-Type': 'application/x-www-form-urlencoded',
+               'Connection': 'keep-alive'}
+    params = {'line_items[0][price]': stripe_price,
+              'line_items[0][quantity]': 1, 'mode': 'subscription', 'success_url': 'https://example.com/success'}
+    response = requests.post(url=url, headers=headers, params=params)
     print(response.status_code)
     print(response.text)
+    stripe_link = json.loads(response.text)
+    return stripe_link
 
 
