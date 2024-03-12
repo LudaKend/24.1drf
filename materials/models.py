@@ -42,3 +42,8 @@ class Subscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь',
                              related_name='user_from_subscription')
     course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name='Курс')
+
+class Stripe(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name='Курс')
+    stripe_product = models.CharField(max_length=100, verbose_name='ID продукта из stripe')
+    stripe_price = models.CharField(max_length=100, verbose_name='ID стоимости из stripe')
