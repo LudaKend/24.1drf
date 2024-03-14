@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR/'.env')
 FOR_POSTGRES_PASSWORD = os.getenv('FOR_POSTGRES_PASSWORD')   #пароль для доступа к БД Postgresql
+STRIPE_TOKEN = os.getenv('STRIPE_TOKEN')                     #токен для Stripe
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/

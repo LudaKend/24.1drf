@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from materials.paginators import MaterialsPaginator
 from django.shortcuts import get_object_or_404
 from users.services import create_product, create_price
-
+from django.conf import settings
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
@@ -25,10 +25,14 @@ class CourseViewSet(viewsets.ModelViewSet):
     def create(self, request):
         """метод для создания записи в таблице Stripe"""
         #print(request.data)            #для отладки
-        stripe_product = create_product(request.data['name'])
+        headers = {'Authorization': settings.STRIPE_TOKEN,
+                   'Content-Type': 'application/x-www-form-urlencoded',
+                   'Connection': 'keep-alive'}
+        stripe_product = create_product(request.data['name'], headers)
         #print(stripe_product)          #для отладки
         #print(stripe_product['id'])    #для отладки
-        stripe_price = create_price(stripe_product['id'])
+
+        stripe_price = create_price(stripe_product['id'], headers)
         #print(stripe_price)            #для отладки
         #serializer = StripeSerializer(data=request.data, stripe_product=stripe_product['id'], stripe_price=stripe_price['id'])
         serializer = CourseSerializer(data=request.data)

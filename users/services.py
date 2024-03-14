@@ -2,13 +2,14 @@ import requests
 import json
 from django.shortcuts import get_object_or_404
 from materials.models import Stripe
+from django.conf import settings
 
-def create_product(name):
+
+
+def create_product(name, headers):
     '''формируем данные для POST-запроса в Stripe, чтобы создать продукт'''
     url = 'https://api.stripe.com/v1/products'
-    headers = {'Authorization': 'Basic c2tfdGVzdF80ZUMzOUhxTHlqV0Rhcmp0VDF6ZHA3ZGM6',
-               'Content-Type': 'application/x-www-form-urlencoded',
-               'Connection': 'keep-alive'}
+    headers = headers
     params = {'name': name}
     response = requests.post(url=url, headers=headers, params=params)
     print(response.status_code)
@@ -16,12 +17,10 @@ def create_product(name):
     return stripe_product
 
 
-def create_price(product_id):
+def create_price(product_id, headers):
     '''формируем данные для POST-запроса в Stripe, чтобы создать стоимость'''
     url = 'https://api.stripe.com/v1/prices'
-    headers = {'Authorization': 'Basic c2tfdGVzdF80ZUMzOUhxTHlqV0Rhcmp0VDF6ZHA3ZGM6',
-               'Content-Type': 'application/x-www-form-urlencoded',
-               'Connection': 'keep-alive'}
+    headers = headers
     params = {'currency': 'usd', 'unit_amount': 1000, 'product': product_id}   #'recurring[interval]': 'month',
     response = requests.post(url=url, headers=headers, params=params)
     print(response.status_code)
