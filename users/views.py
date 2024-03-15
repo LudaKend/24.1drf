@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from materials.models import Course
 from django.shortcuts import get_object_or_404
 from users.services import create_session
+from django.conf import settings
 
 
 class PaymentCreateAPIView(generics.CreateAPIView):
@@ -26,9 +27,11 @@ class PaymentCreateAPIView(generics.CreateAPIView):
         temp_course = get_object_or_404(Course, pk=request.data['course'])
         #print(temp_course)             #для отладки
         #print(temp_course.price)       #для отладки
-
+        headers = {'Authorization': settings.STRIPE_TOKEN,
+         'Content-Type': 'application/x-www-form-urlencoded',
+         'Connection': 'keep-alive'}
         #print(f'id курса из БД{temp_course.id}')     #для отладки
-        link = create_session(temp_course.id)
+        link = create_session(temp_course.id, headers)
         #print(link)                    #для отладки
 
         serializer = PaymentSerializer(data=request.data)

@@ -28,15 +28,13 @@ def create_price(product_id, headers):
     return stripe_price
 
 
-def create_session(course_id):
+def create_session(course_id, headers):
     '''формируем данные для POST-запроса в Stripe, чтобы создать сессию для получения ссылки на оплату'''
     stripe_data = get_object_or_404(Stripe, course_id=course_id)
     stripe_price = stripe_data.stripe_price
     #print(f'прайс из таблицы Stripe:   {stripe_price}')          #для отладки
     url = 'https://api.stripe.com/v1/checkout/sessions'
-    headers = {'Authorization': 'Basic c2tfdGVzdF80ZUMzOUhxTHlqV0Rhcmp0VDF6ZHA3ZGM6',
-               'Content-Type': 'application/x-www-form-urlencoded',
-               'Connection': 'keep-alive'}
+    headers = headers
     params = {'line_items[0][price]': stripe_price,
               'line_items[0][quantity]': 1, 'mode': 'payment', #'mode': 'subscription',
               'success_url': 'https://example.com/success'}
