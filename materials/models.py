@@ -9,10 +9,11 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='images/preview_course/', **NULLABLE, verbose_name='Превью курса')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, verbose_name='Владелец',
                               **NULLABLE)
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='стоимость курса', default=0)
 
     def __str__(self):
         '''строковое отображение обьекта'''
-        return f'{self.name}'
+        return f'{self.name}, {self.price}'
 
     class Meta:
         verbose_name = 'Курс'
@@ -41,3 +42,8 @@ class Subscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь',
                              related_name='user_from_subscription')
     course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name='Курс')
+
+class Stripe(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name='Курс')
+    stripe_product = models.CharField(max_length=100, verbose_name='ID продукта из stripe')
+    stripe_price = models.CharField(max_length=100, verbose_name='ID стоимости из stripe')

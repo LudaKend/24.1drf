@@ -1,9 +1,15 @@
 from rest_framework import serializers
 from rest_framework.serializers import SerializerMethodField
-from materials.models import Course, Lesson, Subscription
+from materials.models import Course, Lesson, Subscription, Stripe
 from materials.validators import WrongLinkValidator
 from users.serializer import UserSerializer
 import json
+
+
+class StripeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stripe
+        fields = '__all__'
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
@@ -31,12 +37,9 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def get_quantity_lesson(self, course):
         list_lesson = Lesson.objects.filter(course=course)
-        print(list_lesson)  #для отладки
+        #print(list_lesson)  #для отладки
         return len(list_lesson)
 
-    # def get_object(self, queryset):
-    #     print(f'queryset {queryset}')
-    #     return self.request.user
 
     def get_subscriptions(self, obj):
         # print(obj)
@@ -62,6 +65,6 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['name', 'description', 'quantity_lesson', 'lessons', 'subscriptions', 'user', ]
+        fields = ['name', 'description', 'price', 'quantity_lesson', 'lessons', 'subscriptions', 'user', ]
         validators = [WrongLinkValidator(field='name'), WrongLinkValidator(field='description')]
 
