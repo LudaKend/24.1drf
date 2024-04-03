@@ -19,7 +19,7 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR/'.env')
-FOR_POSTGRES_PASSWORD = os.getenv('FOR_POSTGRES_PASSWORD')   #пароль для доступа к БД Postgresql
+
 STRIPE_TOKEN = os.getenv('STRIPE_TOKEN')                     #токен для Stripe
 
 # Quick-start development settings - unsuitable for production
@@ -88,12 +88,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '24.1drf',
-        'USER': 'postgres',
-        'HOST': '127.0.0.1',
-        'PORT': 5432,
-        'PASSWORD': FOR_POSTGRES_PASSWORD,
+        'NAME': os.getenv('FOR_POSTGRES_NAME'),
+        'USER': os.getenv('FOR_POSTGRES_USER'),
+        'HOST': os.getenv('FOR_POSTGRES_HOST'),
+        'PORT': os.getenv('FOR_POSTGRES_PORT'),
+        'PASSWORD': os.getenv('FOR_POSTGRES_PASSWORD'),
     }
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'HOST': 'db',
+#
+#         'PASSWORD': os.getenv('FOR_POSTGRES_PASSWORD'),
+#     }
 }
 
 
