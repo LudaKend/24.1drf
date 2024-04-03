@@ -11,13 +11,15 @@ services:
       POSTGRES_PORT: ${FOR_POSTGRES_PORT}
       POSTGRES_USER: ${FOR_POSTGRES_USER}
       POSTGRES_PASSWORD: ${FOR_POSTGRES_PASSWORD}
-#      - POSTGRES_PASSWORD=mysecretpassword
-#      - PGDATA=/var/lib/postgresql/data/pgdata
-      #PG_DBNAME: '24.1drf'
+
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
 
   app:
     build: .
